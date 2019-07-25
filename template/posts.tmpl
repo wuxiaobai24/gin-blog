@@ -1,0 +1,21 @@
+{{ template "_header" }}
+
+<article>
+	<p>Hello, I am wuxiaobai24.</p>
+
+	<h1>Posts</h1>
+	<ul>
+		{{range .Posts}}
+			<li><a href="/post/{{.ID}}">{{.Title}}</a>, {{ToDate .CreatedAt}}</li>
+		{{end}}
+	</ul>
+	{{if .Prev}}
+	<a>Prev</a>
+	{{end}}
+	{{if .Next}}
+	<a>Next</a>
+	{{end}}
+
+</article>
+
+{{ template "_footer" }}
