@@ -3,7 +3,7 @@ a blog build by golang.
 
 ## TODO
 
-- [ - ] base blog
+- [x] base blog
 - [ ] Markdown render
 - [ ] code highlight
 - [ ] Tag Support 
