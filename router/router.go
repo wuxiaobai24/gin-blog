@@ -1,13 +1,12 @@
 package router
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/wuxiaobai24/gin-blog/models"
+	"github.com/wuxiaobai24/gin-blog/pkg"
 )
 
 var r *gin.Engine
@@ -16,7 +15,8 @@ func init() {
 	r = gin.Default()
 
 	r.SetFuncMap(template.FuncMap{
-		"ToDate": ToDate,
+		"ToDate":   pkg.ToDate,
+		"Markdown": pkg.Markdown2HTML,
 	})
 	r.LoadHTMLGlob("./template/*.tmpl")
 
@@ -37,11 +37,6 @@ func index(c *gin.Context) {
 	c.HTML(200, "index.tmpl", gin.H{
 		"title": "wuxiaobai24's blog",
 	})
-}
-
-// ToDate template func
-func ToDate(t time.Time) string {
-	return fmt.Sprintf("%v-%v-%v", t.Year(), t.Month(), t.Day())
 }
 
 // getPosts Get Posts

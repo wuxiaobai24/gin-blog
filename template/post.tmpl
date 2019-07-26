@@ -1,7 +1,7 @@
-{{ template "_header" }}
+{{ template "_header" .}}
 
 <article>
-	{{ .Post.Content }}
+	{{ .Post.Content | Markdown }}
 </article>
 
 {{ template "_footer" }}

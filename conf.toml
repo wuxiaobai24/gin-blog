@@ -7,5 +7,5 @@ port = 8080
 type = "sqlite3"
 user = ""
 password = ""
-name = "./gorm.debug"
+name = "./gorm.db"
 

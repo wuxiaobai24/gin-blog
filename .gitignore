@@ -12,3 +12,6 @@
 *.out
 
 *.db
+
+# add post is cli tool
+addpost
