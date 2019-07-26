@@ -25,7 +25,8 @@ func InitDB() error {
 	if err != nil {
 		return err
 	}
-	db.AutoMigrate(&Post{})
+	db.AutoMigrate(&Post{}, &Tag{})
+	db = db.Set("gorm:auto_preload", true)
 	return nil
 }
 

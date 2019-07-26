@@ -32,6 +32,10 @@ func main() {
 		err = models.AddPost(map[string]interface{}{
 			"Title":   title,
 			"Content": content,
+			"Tags": []*models.Tag{
+				&models.Tag{Name: "tag1"},
+				&models.Tag{Name: "tag2"},
+			},
 		})
 		if err != nil {
 			panic(err)

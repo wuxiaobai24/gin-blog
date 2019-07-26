@@ -31,6 +31,8 @@ func init() {
 	r.GET("index", index)
 	r.GET("/posts", getPosts)
 	r.GET("/post/:id", getPost)
+	r.GET("/tags", getTags)
+	r.GET("/tag/:id", getTag)
 }
 
 func index(c *gin.Context) {
@@ -66,6 +68,31 @@ func getPost(c *gin.Context) {
 		"Post":  post,
 		"Prev":  nil,
 		"Next":  nil,
+	})
+}
+
+//getTags return tags
+func getTags(c *gin.Context) {
+	tags, err := models.GetTags()
+	if err != nil {
+		panic(err)
+		c.JSON(400, gin.H{"message": "failure"})
+	}
+	c.HTML(200, "tags.tmpl", gin.H{
+		"Title": "tags",
+		"Tags":  tags,
+	})
+}
+
+func getTag(c *gin.Context) {
+	id := c.Param("id")
+	tag, err := models.GetTag(id)
+	if err != nil {
+		panic(err)
+	}
+	c.HTML(200, "posts.tmpl", gin.H{
+		"Title": tag.Name,
+		"Posts": tag.Posts,
 	})
 }
 

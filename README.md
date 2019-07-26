@@ -6,6 +6,6 @@ a blog build by golang.
 - [x] base blog
 - [x] Markdown render
 - [x] code highlight
-- [ ] Tag Support 
+- [x] Tag Support 
 - [ ] Post file upload api
 - [ ] admin view

@@ -1,6 +1,11 @@
 {{ template "_header" .}}
 
 <article>
+	<ul id="tags">
+		{{range .Post.Tags}}
+		<li><a href="/tag/{{.ID}}">{{.Name}}</a></li>
+		{{end}}
+	</ul>
 	{{ .Post.Content | Markdown }}
 </article>
 

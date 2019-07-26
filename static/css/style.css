@@ -1,0 +1,4 @@
+#tags li {
+	list-style: none;
+	display: inline;
+}
