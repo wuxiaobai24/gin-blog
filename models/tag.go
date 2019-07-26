@@ -27,3 +27,36 @@ func GetTag(id interface{}) (*Tag, error) {
 	}
 	return &tag, err
 }
+
+func GetTagByName(name string) (*Tag, error) {
+	var tag Tag
+	err := db.Where("name = ?", name).First(&tag).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return &tag, err
+}
+
+func CreateTagByName(name string) (*Tag, error) {
+	tag := Tag{Name: name}
+	if err := db.Create(&tag).Error; err != nil {
+		return nil, err
+	}
+	return &tag, nil
+}
+
+func GenerateTag(name string) (*Tag, error) {
+	var tag Tag
+	err := db.Where("name = ?", name).First(&tag).Error
+
+	if err != nil && err == gorm.ErrRecordNotFound {
+		t, err := CreateTagByName(name)
+		if err != nil {
+			return nil, err
+		}
+		tag = *t
+	} else if err != nil {
+		return nil, err
+	}
+	return &tag, err
+}

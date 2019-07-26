@@ -1,8 +1,11 @@
 package router
 
 import (
+	"fmt"
 	"html/template"
+	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/wuxiaobai24/gin-blog/models"
@@ -31,13 +34,24 @@ func init() {
 	r.GET("index", index)
 	r.GET("/posts", getPosts)
 	r.GET("/post/:id", getPost)
+
 	r.GET("/tags", getTags)
 	r.GET("/tag/:id", getTag)
+
+	r.GET("/admin", admin)
+
+	r.POST("/upload", uploadPost)
 }
 
 func index(c *gin.Context) {
 	c.HTML(200, "index.tmpl", gin.H{
-		"title": "wuxiaobai24's blog",
+		"Title": "wuxiaobai24's blog",
+	})
+}
+
+func admin(c *gin.Context) {
+	c.HTML(200, "admin.tmpl", gin.H{
+		"Title": "Admin",
 	})
 }
 
@@ -94,6 +108,49 @@ func getTag(c *gin.Context) {
 		"Title": tag.Name,
 		"Posts": tag.Posts,
 	})
+}
+
+func uploadPost(c *gin.Context) {
+	title := c.PostForm("title")
+	taglist := strings.Split(c.PostForm("tags"), ",")
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		// c.String(http.StatusBadRequest, fmt.Sprintf("get form err: %s", err.Error()))
+		c.Redirect(http.StatusMovedPermanently, "/index")
+		return
+	}
+
+	f, err := file.Open()
+	if err != nil {
+		// c.String(http.StatusBadRequest, fmt.Sprintf("get form err: %s", err.Error()))
+		c.Redirect(http.StatusMovedPermanently, "/index")
+		return
+	}
+
+	content, err := ioutil.ReadAll(f)
+	if err != nil {
+		c.String(http.StatusBadRequest, fmt.Sprintf("get form err: %s", err.Error()))
+		return
+	}
+
+	var tags []*models.Tag
+	for _, tagname := range taglist {
+		tag, err := models.GenerateTag(strings.TrimSpace(tagname))
+		if err != nil {
+			panic(err)
+			continue
+		}
+		tags = append(tags, tag)
+	}
+
+	err = models.AddPost(map[string]interface{}{
+		"Title":   title,
+		"Content": string(content),
+		"Tags":    tags,
+	})
+
+	c.Redirect(http.StatusMovedPermanently, "/index")
 }
 
 // Run server

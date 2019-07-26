@@ -35,7 +35,7 @@ func AddPost(data map[string]interface{}) error {
 		Content: data["Content"].(string),
 		Tags:    data["Tags"].([]*Tag),
 	}
-	if err := db.Create(&post).Error; err != nil {
+	if err := db.Set("gorm:association_autocreate", true).Create(&post).Error; err != nil {
 		return err
 	}
 	return nil

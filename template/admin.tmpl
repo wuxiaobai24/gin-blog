@@ -1,0 +1,13 @@
+{{ template "_header" .}}
+
+<article>
+	<h1>Upload file</h1>
+	<<form action="/upload" method="post" enctype="multipart/form-data">
+    Title: <input type="text" name="title"><br>
+    Tags: <input type="text" name="tags"><br>
+    Files: <input type="file" name="file"><br><br>
+    <input type="submit" value="Submit">
+	</form>
+</article>
+
+{{ template "_footer" }}

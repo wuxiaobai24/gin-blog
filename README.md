@@ -7,5 +7,7 @@ a blog build by golang.
 - [x] Markdown render
 - [x] code highlight
 - [x] Tag Support 
-- [ ] Post file upload api
+- [x] Post file upload api
+- [ ] Auth
+- [ ] Pagination
 - [ ] admin view
