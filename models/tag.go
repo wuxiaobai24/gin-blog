@@ -58,5 +58,5 @@ func GenerateTag(name string) (*Tag, error) {
 	} else if err != nil {
 		return nil, err
 	}
-	return &tag, err
+	return &tag, nil
 }

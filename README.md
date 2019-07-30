@@ -9,5 +9,5 @@ a blog build by golang.
 - [x] Tag Support 
 - [x] Post file upload api
 - [ ] Auth
-- [ ] Pagination
+- [x] Pagination
 - [ ] admin view

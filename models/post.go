@@ -1,6 +1,8 @@
 package models
 
 import (
+	"strings"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -29,10 +31,17 @@ func GetPost(id string) (*Post, error) {
 	return &post, err
 }
 
+func PostCount() (int, error) {
+	var count int
+	err := db.Model(&Post{}).Count(&count).Error
+	return count, err
+}
+
 func AddPost(data map[string]interface{}) error {
+	content := strings.Replace(data["Content"].(string), "\n\r", "\n", -1)
 	post := Post{
 		Title:   data["Title"].(string),
-		Content: data["Content"].(string),
+		Content: content,
 		Tags:    data["Tags"].([]*Tag),
 	}
 	if err := db.Set("gorm:association_autocreate", true).Create(&post).Error; err != nil {

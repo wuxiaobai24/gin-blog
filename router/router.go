@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -13,6 +14,7 @@ import (
 )
 
 var r *gin.Engine
+var pageSize = 10
 
 func init() {
 	r = gin.Default()
@@ -38,9 +40,9 @@ func init() {
 	r.GET("/tags", getTags)
 	r.GET("/tag/:id", getTag)
 
-	r.GET("/admin", admin)
+	// r.GET("/admin", admin)
 
-	r.POST("/upload", uploadPost)
+	// r.POST("/upload", uploadPost)
 }
 
 func index(c *gin.Context) {
@@ -55,18 +57,49 @@ func admin(c *gin.Context) {
 	})
 }
 
+func Pagination(c *gin.Context) (int, int) {
+	pageNumStr := c.Query("page")
+	pageNum := 1
+
+	if pageNumStr != "" {
+		num, err := strconv.Atoi(pageNumStr)
+		if err == nil {
+			pageNum = num
+		}
+	}
+	offset := (pageNum - 1) * pageSize
+	return pageNum, offset
+}
+
 // getPosts Get Posts
 func getPosts(c *gin.Context) {
-	posts, err := models.GetPosts(0, 10)
+	page, offset := Pagination(c)
+	posts, err := models.GetPosts(offset, pageSize)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"message": "failue",
 		})
 		return
 	}
+	var next, prev string
+
+	if page != 1 {
+		prev = fmt.Sprintf("/posts?page=%v", page-1)
+	}
+	count, err := models.PostCount()
+	if err != nil {
+		c.Abort()
+		return
+	}
+	if offset+pageSize <= count {
+		next = fmt.Sprintf("/posts?page=%v", page+1)
+	}
+
 	c.HTML(200, "posts.tmpl", gin.H{
 		"Title": "Archive",
 		"Posts": posts,
+		"Prev":  prev,
+		"Next":  next,
 	})
 }
 
